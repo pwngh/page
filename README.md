@@ -11,13 +11,13 @@ This package provides a comprehensive system for building dynamic, streaming-ena
 This package is not published to the public npm registry. Install it directly from GitHub:
 
 ```bash
-npm install https://github.com/pwn-interests/page.git
+npm install https://github.com/pwngh/page.git
 ```
 
 Or clone and build from source:
 
 ```bash
-git clone https://github.com/pwn-interests/page.git
+git clone https://github.com/pwngh/page.git
 cd page
 npm install
 npm run build
@@ -263,4 +263,4 @@ While the package uses JSDoc for type definitions, it provides full TypeScript s
 
 ### License
 
-MIT — see [LICENSE](./LICENSE).
+MIT — see [LICENSE](LICENSE). Copyright (c) 2026 Preston Neal.
