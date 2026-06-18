@@ -1,0 +1,7 @@
+build/
+coverage/
+dist/
+/.cache
+/build
+/public/build
+.env

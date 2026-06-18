@@ -4,7 +4,7 @@
   "description": "Page integrations for Remix applications.",
   "author": "Preston Neal",
   "license": "MIT",
-  "repository": "https://github.com/pwn-interests/page.git",
+  "repository": "https://github.com/pwngh/page.git",
   "type": "module",
   "exports": {
     ".": null,
@@ -44,8 +44,8 @@
   "peerDependencies": {
     "@remix-run/node": ">=2.13.1",
     "@remix-run/react": ">=2.13.1",
-    "react": ">=18.2.0",
-    "mysql2": ">=3.9.1"
+    "mysql2": ">=3.9.1",
+    "react": ">=18.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
@@ -69,6 +69,8 @@
     "@types/node": "^22.10.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "ajv": "^6.15.0",
+    "ajv-keywords": "^3.5.2",
     "autoprefixer": "^10.4.20",
     "babel-loader": "^9.2.1",
     "babel-plugin-pure-annotations": "^0.1.2",
