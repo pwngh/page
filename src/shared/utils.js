@@ -126,31 +126,12 @@ export const cn = (...classes) => {
 };
 
 /**
- * True when executing in a browser (window is defined).
- * @type {boolean}
- */
-export const isBrowser = typeof window !== 'undefined';
-
-/**
- * Create a promise whose resolve/reject are exposed to the caller.
- *
- * @returns {{ promise: Promise, resolve: Function, reject: Function }} The pending promise and its settle functions.
- */
-export const createDeferred = () => {
-  let resolve, reject;
-  const promise = new Promise((res, rej) => {
-    resolve = res;
-    reject = rej;
-  });
-  return { promise, resolve, reject };
-};
-
-/**
  * Apply an input mask to a raw field value based on the input type.
  *
  * Supported types: 'tel' (555-123-4567), 'card-number' (groups of four),
- * 'card-expiration' (MM/YY), and 'dollar' (strips non-numeric characters
- * and leading zeros). Other types — and empty values — pass through unchanged.
+ * 'card-expiration' (MM/YY), and 'dollar' (strips characters other than
+ * digits and a decimal point, and removes leading zeros). Other types — and
+ * empty values — pass through unchanged.
  *
  * @param {string} value - Raw user input.
  * @param {string} type - Input type selecting the mask.

@@ -22,7 +22,6 @@ const sharedConfig = {
     'react',
     'react/jsx-runtime',
     'react/jsx-dev-runtime',
-    'prop-types',
     '@remix-run/node',
     '@remix-run/react',
     'mysql2/promise',

@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useFetcher, useAsyncValue } from '@remix-run/react';
 import { createUrlWithParams } from '../../shared/utils.js';
 
@@ -40,20 +39,10 @@ export function useComponent(componentId, options = {}) {
   const fetcher = useFetcher();
   const streamedValue = useAsyncValue();
 
-  const endpoint = useMemo(() => {
-    if (options.endpoint) return options.endpoint;
-    return `/components/${componentId}`;
-  }, [options.endpoint, componentId]);
+  const endpoint = options.endpoint || `/components/${componentId}`;
 
-  const componentData = useMemo(() => {
-    if (options.initialData) {
-      return options.initialData;
-    }
-    if (options.awaitStreaming && streamedValue) {
-      return streamedValue;
-    }
-    return fetcher.data;
-  }, [options.initialData, options.awaitStreaming, streamedValue, fetcher.data]);
+  const componentData =
+    options.initialData || (options.awaitStreaming && streamedValue) || fetcher.data;
 
   const updateComponent = async (data) => {
     return fetcher.submit(
@@ -98,15 +87,4 @@ export function useComponent(componentId, options = {}) {
     fetcher,
     endpoint
   };
-}
-
-/**
- * Resolve a streamed <Await> value and pass it to a render-prop child.
- *
- * @param {Object} props
- * @param {(data: *) => import('react').ReactNode} props.children - Render function receiving the resolved value.
- */
-export function ComponentDataWrapper({ children }) {
-  const data = useAsyncValue();
-  return children(data);
 }

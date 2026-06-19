@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { cn } from '../../shared/utils.js';
 
 /**
@@ -348,14 +348,14 @@ export function Input({
       ],
       {
         'border-gray-300 focus:border-blue-500 focus:ring-blue-500':
-          !propError && !disabled && !readOnly,
+          !error && !disabled && !readOnly,
         'border-red-300 focus:border-red-500 focus:ring-red-500':
-          propError && !disabled && !readOnly,
+          error && !disabled && !readOnly,
         'border-gray-200': disabled || readOnly,
       },
       className
     );
-  }, [propError, disabled, readOnly, className]);
+  }, [error, disabled, readOnly, className]);
 
   const handleChange = (e) => {
     const rule = VALIDATION_RULES[type] || defaultRule;

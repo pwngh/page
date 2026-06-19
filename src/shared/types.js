@@ -97,20 +97,9 @@
  * @property {AccordionItem[]} items - Array of accordion items to display
  * @property {string} [bgColor='bg-white'] - Background color class
  * @property {string} [textColor='text-gray-800'] - Text color class
- * @property {string} [hoverColor='bg-gray-50'] - Hover background color class
+ * @property {string} [hoverColor='hover:bg-gray-50'] - Hover background class (full Tailwind hover: utility)
  * @property {string} [activeColor='bg-gray-100'] - Active/selected color class
  * @property {boolean} [multiple=false] - Allow multiple items to be open simultaneously
- */
-
-/**
- * @typedef {Object} AccordionItemProps
- * @property {AccordionItem} item - Accordion item data
- * @property {boolean} isOpen - Whether this item is expanded
- * @property {(id: string) => void} onClick - Click handler for toggling item
- * @property {string} [bgColor='bg-white'] - Background color class
- * @property {string} [textColor='text-gray-800'] - Text color class
- * @property {string} [hoverColor='bg-gray-50'] - Hover background color class
- * @property {string} [activeColor='bg-gray-100'] - Active/selected color class
  */
 
 /**
@@ -229,7 +218,7 @@
  * @typedef {Object} IconProps
  * @property {string} name - Icon identifier name
  * @property {string} [size='24'] - Width/height in pixels
- * @property {string} [color='currentColor'] - Icon color
+ * @property {string} [color='black'] - Icon color
  * @property {string} [className] - Additional CSS classes
  * @property {React.CSSProperties} [style] - Inline styles
  * @property {() => void} [onClick] - Click event handler
@@ -307,7 +296,7 @@
  * @property {MenuItem[]} items - Array of top-level menu items
  * @property {string} [bgColor='bg-white'] - Background color for the menu
  * @property {string} [textColor='text-gray-800'] - Text color for menu items
- * @property {string} [hoverColor='bg-gray-50'] - Background color for hover states
+ * @property {string} [hoverColor='hover:bg-gray-50'] - Hover background class (full Tailwind hover: utility)
  * @property {string} [selectedColor='text-blue-600'] - Text color for selected items
  * @property {string} [activeColor='bg-gray-100'] - Background color for active items
  * @property {function} [onSelect] - Callback when menu item is selected
@@ -368,7 +357,7 @@
 /**
  * @typedef {Object} SectionProps
  * @property {'default'|'primary'|'secondary'|'dark'} [variant='default'] - Background variant
- * @property {'none'|'sm'|'md'|'lg'} [space='md'] - Vertical padding
+ * @property {'none'|'xs'|'sm'|'md'|'lg'} [space='md'] - Vertical padding
  * @property {boolean} [divider=false] - Show bottom border divider
  * @property {string} [padding] - Custom padding override
  * @property {boolean} [constrainWidth=true] - Constrain content width
@@ -481,17 +470,6 @@
  * @property {number} [delay=0] - Delay before showing tooltip (ms)
  * @property {boolean} [disabled=false] - Disable tooltip
  * @property {string} [className] - Additional CSS classes for tooltip
- */
-
-/**
- * Query Types
- */
-
-/**
- * @typedef {Object} QueryOptions
- * @property {Object} [sort] - Sort specification
- * @property {number} [limit] - Maximum number of results
- * @property {number} [skip] - Number of results to skip
  */
 
 // Export empty object since types are just for documentation

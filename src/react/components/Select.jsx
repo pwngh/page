@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef, useEffect } from 'react';
+import { useMemo, useState, useRef, useEffect, useId } from 'react';
 import { cn } from '../../shared/utils.js';
 
 /**
@@ -26,17 +26,26 @@ export function Select({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const selectRef = useRef(null);
+  const triggerRef = useRef(null);
+  const optionRefs = useRef([]);
 
-  const currentValue = value !== undefined ? value : internalValue;
+  const reactId = useId();
+  const labelId = `${reactId}-label`;
+  const listboxId = `${reactId}-listbox`;
+
+  const isControlled = value !== undefined;
+  const currentValue = isControlled ? value : internalValue;
   const selectedOption = data.find(item => item.value === currentValue);
 
   const handleOptionSelect = (optionValue) => {
     if (!disabled && !loading) {
+      if (!isControlled) {
+        setInternalValue(optionValue);
+      }
       if (onChange) {
         onChange(optionValue);
-      } else {
-        setInternalValue(optionValue);
       }
       setIsOpen(false);
     }
@@ -52,6 +61,62 @@ export function Select({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      const selectedIndex = data.findIndex(item => item.value === currentValue);
+      setActiveIndex(selectedIndex >= 0 ? selectedIndex : 0);
+    } else {
+      setActiveIndex(-1);
+    }
+  }, [isOpen, currentValue, data]);
+
+  useEffect(() => {
+    if (isOpen && activeIndex >= 0) {
+      optionRefs.current[activeIndex]?.focus();
+    }
+  }, [isOpen, activeIndex]);
+
+  const closeAndFocusTrigger = () => {
+    setIsOpen(false);
+    triggerRef.current?.focus();
+  };
+
+  const handleOptionKeyDown = (event) => {
+    if (disabled || loading) return;
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        setActiveIndex(prev => (prev + 1) % data.length);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        setActiveIndex(prev => (prev - 1 + data.length) % data.length);
+        break;
+      case 'Home':
+        event.preventDefault();
+        setActiveIndex(0);
+        break;
+      case 'End':
+        event.preventDefault();
+        setActiveIndex(data.length - 1);
+        break;
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        if (data[activeIndex]) {
+          handleOptionSelect(data[activeIndex].value);
+        }
+        triggerRef.current?.focus();
+        break;
+      case 'Escape':
+        event.preventDefault();
+        closeAndFocusTrigger();
+        break;
+      default:
+        break;
+    }
+  };
 
   const containerClasses = useMemo(() => {
     return cn(
@@ -149,7 +214,7 @@ export function Select({
   return (
     <div className={containerClasses} ref={selectRef}>
       {label && (
-        <label className="block text-sm font-medium text-gray-700">
+        <label id={labelId} className="block text-sm font-medium text-gray-700">
           {label}
         </label>
       )}
@@ -157,9 +222,14 @@ export function Select({
       <div className="relative">
         <button
           type="button"
+          ref={triggerRef}
           className={triggerClasses}
           onClick={() => !disabled && !loading && setIsOpen(!isOpen)}
           disabled={disabled || loading}
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          aria-controls={listboxId}
+          aria-labelledby={label ? labelId : undefined}
           {...props}
         >
           {loading ? (
@@ -170,6 +240,7 @@ export function Select({
             </span>
           )}
           <svg
+            aria-hidden="true"
             viewBox="0 0 24 24"
             className={cn(
               "h-4 w-4 transition-transform",
@@ -185,16 +256,29 @@ export function Select({
           </svg>
         </button>
 
-        <div className={dropdownClasses}>
-          {data.map((option) => (
-            <div
-              key={option.value}
-              className={optionClasses(option.value === currentValue)}
-              onClick={() => handleOptionSelect(option.value)}
-            >
-              {option.label}
-            </div>
-          ))}
+        <div
+          id={listboxId}
+          role="listbox"
+          aria-labelledby={label ? labelId : undefined}
+          className={dropdownClasses}
+        >
+          {data.map((option, index) => {
+            const isSelected = option.value === currentValue;
+            return (
+              <div
+                key={option.value}
+                ref={(el) => { optionRefs.current[index] = el; }}
+                role="option"
+                aria-selected={isSelected}
+                tabIndex={activeIndex === index ? 0 : -1}
+                className={optionClasses(isSelected)}
+                onClick={() => handleOptionSelect(option.value)}
+                onKeyDown={handleOptionKeyDown}
+              >
+                {option.label}
+              </div>
+            );
+          })}
         </div>
       </div>
 

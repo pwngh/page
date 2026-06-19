@@ -33,7 +33,7 @@ export function Banner({
   const bannerClasses = useMemo(() => {
     return cn(
       // Base
-      'relative',
+      'fixed',
       'left-0',
       'right-0',
       'z-50',

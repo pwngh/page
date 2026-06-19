@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { cn } from '../../shared/utils.js';
 
 /**
@@ -25,30 +25,28 @@ export function Tooltip({
   const tooltipRef = useRef(null);
   const timeoutRef = useRef(null);
 
-  const tooltipClasses = useMemo(() => {
-    return cn(
-      // Base
-      'absolute',
-      'z-50',
-      'px-2',
-      'py-1',
-      'text-sm',
-      'text-white',
-      'bg-gray-900',
-      'rounded',
-      'shadow-lg',
-      'pointer-events-none',
-      'whitespace-nowrap',
-      'transition-opacity',
-      'duration-200',
+  const tooltipClasses = cn(
+    // Base
+    'absolute',
+    'z-50',
+    'px-2',
+    'py-1',
+    'text-sm',
+    'text-white',
+    'bg-gray-900',
+    'rounded',
+    'shadow-lg',
+    'pointer-events-none',
+    'whitespace-nowrap',
+    'transition-opacity',
+    'duration-200',
 
-      // Visibility
-      isVisible ? 'opacity-100' : 'opacity-0',
+    // Visibility
+    isVisible ? 'opacity-100' : 'opacity-0',
 
-      // Custom classes
-      className
-    );
-  }, [isVisible, className]);
+    // Custom classes
+    className
+  );
 
   const calculatePosition = useCallback(() => {
     if (!triggerRef.current || !tooltipRef.current) return;
@@ -92,23 +90,24 @@ export function Tooltip({
     if (delay) {
       timeoutRef.current = setTimeout(() => {
         setIsVisible(true);
-        calculatePosition();
       }, delay);
     } else {
       setIsVisible(true);
-      calculatePosition();
     }
   };
 
   const handleHide = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
     setIsVisible(false);
   };
 
   useEffect(() => {
     if (isVisible) {
+      // The tooltip is now mounted, so its ref is set and position can be measured.
+      calculatePosition();
       window.addEventListener('scroll', calculatePosition);
       window.addEventListener('resize', calculatePosition);
 
@@ -118,6 +117,13 @@ export function Tooltip({
       };
     }
   }, [isVisible, calculatePosition]);
+
+  // Cancel a pending delayed-show timer if the trigger unmounts.
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   return (
     <>

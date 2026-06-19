@@ -33,13 +33,10 @@ export function Form({
   const isControlled = onChange !== undefined && mode === 'controlled';
   const currentData = isControlled ? formData : internalState;
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const newValue = type === 'checkbox' ? checked : value;
-
+  const setField = (name, value) => {
     const updatedData = {
       ...currentData,
-      [name]: newValue,
+      [name]: value,
     };
 
     if (!isControlled) {
@@ -49,6 +46,16 @@ export function Form({
     if (onChange) {
       onChange(updatedData);
     }
+  };
+
+  // Field children may emit a native change event OR (for this library's
+  // Checkbox/Select/Radio) a bare value/boolean. Normalize both shapes.
+  const resolveValue = (arg) => {
+    if (arg && arg.target) {
+      const { value, type, checked } = arg.target;
+      return type === 'checkbox' ? checked : value;
+    }
+    return arg;
   };
 
   const formClasses = useMemo(() => {
@@ -62,9 +69,14 @@ export function Form({
 
   const enhancedChildren = React.Children.map(children, child => {
     if (React.isValidElement(child) && child.props.name) {
+      const name = child.props.name;
+      const isToggle = child.props.type === 'checkbox' || child.props.type === 'radio';
+      const stateProp = isToggle
+        ? { checked: Boolean(currentData[name]) }
+        : { value: currentData[name] ?? '' };
       return React.cloneElement(child, {
-        value: currentData[child.props.name] || '',
-        onChange: handleChange,
+        ...stateProp,
+        onChange: (arg) => setField(name, resolveValue(arg)),
         ...child.props,
       });
     }
@@ -79,7 +91,6 @@ export function Form({
       replace={replace}
       preventScrollReset={preventScrollReset}
       relative={relative}
-      onChange={handleChange}
       {...props}
     >
       {enhancedChildren}

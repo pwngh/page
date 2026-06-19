@@ -38,7 +38,7 @@ export function Text({
 
       // Color Variants
       {
-        'text-gray-900': !variant && !className?.includes('text'),
+        'text-gray-900': !variant && !/text-(?:white|black|current|transparent|inherit|[a-z]+-\d{2,3})/.test(className || ''),
         'text-blue-600': variant === 'primary',
         'text-gray-600': variant === 'secondary',
         'text-green-600': variant === 'success',

@@ -74,11 +74,14 @@ export function Divider({
         'border-dotted border-gray-200': variant === 'dotted',
       },
 
-      // Line weight
+      // Line weight (top border for horizontal, left border for vertical)
       {
-        'border-t': weight === 'thin' && variant !== 'solid',
-        'border-t-2': weight === 'medium' && variant !== 'solid',
-        'border-t-4': weight === 'thick' && variant !== 'solid',
+        'border-t': orientation === 'horizontal' && weight === 'thin' && variant !== 'solid',
+        'border-t-2': orientation === 'horizontal' && weight === 'medium' && variant !== 'solid',
+        'border-t-4': orientation === 'horizontal' && weight === 'thick' && variant !== 'solid',
+        'border-l': orientation === 'vertical' && weight === 'thin' && variant !== 'solid',
+        'border-l-2': orientation === 'vertical' && weight === 'medium' && variant !== 'solid',
+        'border-l-4': orientation === 'vertical' && weight === 'thick' && variant !== 'solid',
       }
     );
   }, [orientation, variant, weight]);

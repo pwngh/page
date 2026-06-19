@@ -58,7 +58,9 @@ export function FileUpload({
 
     for (const file of files) {
       if (accept && !accept.some(type =>
-        file.type.startsWith(type.replace('*', '')))) {
+        type.endsWith('/*')
+          ? file.type.startsWith(type.slice(0, -1))
+          : file.type === type)) {
         setError(`File type not allowed: ${file.name}`);
         return false;
       }
@@ -74,6 +76,7 @@ export function FileUpload({
 
   const handleFiles = (files) => {
     if (disabled) return;
+    if (!files || files.length === 0) return;
 
     const fileList = multiple ? files : [files[0]];
 
@@ -102,6 +105,13 @@ export function FileUpload({
     if (!disabled) fileInputRef.current?.click();
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (e.key === ' ') e.preventDefault();
+      handleClick();
+    }
+  };
+
   const handleChange = (e) => {
     handleFiles(e.target.files);
     // Clear the input so picking the same file again still fires onChange.
@@ -112,10 +122,16 @@ export function FileUpload({
     <div className="w-full">
       <div
         className={containerClasses}
+        role="button"
+        tabIndex={disabled ? -1 : 0}
+        aria-disabled={disabled}
+        aria-label="Upload files: drop files here or activate to browse"
+        aria-describedby={error ? 'file-upload-error' : undefined}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={handleClick}
+        onKeyDown={handleKeyDown}
         {...props}
       >
         <input
@@ -171,7 +187,7 @@ export function FileUpload({
       </div>
 
       {error && (
-        <p className="mt-2 text-sm text-red-600">
+        <p id="file-upload-error" role="alert" className="mt-2 text-sm text-red-600">
           {error}
         </p>
       )}

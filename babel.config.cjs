@@ -15,10 +15,7 @@ module.exports = {
     skipForOfIteratorClosing: true
   },
   plugins: [
-    'pure-annotations',
-    ['transform-react-remove-prop-types', {
-      mode: 'remove'
-    }]
+    'pure-annotations'
   ],
   presets: [
     [

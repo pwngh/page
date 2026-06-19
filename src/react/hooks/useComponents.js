@@ -41,10 +41,7 @@ export function useComponents(pageId, options = {}) {
   const fetcher = useFetcher();
   const streamedValue = useAsyncValue();
 
-  const endpoint = useMemo(() => {
-    if (options.endpoint) return options.endpoint;
-    return `/pages/${pageId}/components`;
-  }, [options.endpoint, pageId]);
+  const endpoint = options.endpoint || `/pages/${pageId}/components`;
 
   const componentsData = useMemo(() => {
     if (options.initialData) {
@@ -112,15 +109,4 @@ export function useComponents(pageId, options = {}) {
     fetcher,
     endpoint
   };
-}
-
-/**
- * Resolve a streamed <Await> value and pass it to a render-prop child.
- *
- * @param {Object} props
- * @param {(data: *) => import('react').ReactNode} props.children - Render function receiving the resolved value.
- */
-export function ComponentsDataWrapper({ children }) {
-  const data = useAsyncValue();
-  return children(data);
 }

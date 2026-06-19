@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useId } from 'react';
 import { cn } from '../../shared/utils.js';
 
 /**
@@ -15,8 +15,12 @@ export function Textarea({
   label,
   value,
   onChange,
+  id,
   ...props
 }) {
+  const generatedId = useId();
+  const textareaId = id || generatedId;
+
   const textareaClasses = useMemo(() => {
     return cn(
       // Base
@@ -64,15 +68,17 @@ export function Textarea({
     <div>
       {label && (
         <label
-          htmlFor={props.id}
+          htmlFor={textareaId}
           className="block text-sm font-medium text-gray-700 mb-1"
         >
           {label}
         </label>
       )}
       <textarea
+        id={textareaId}
         className={textareaClasses}
         disabled={disabled}
+        aria-invalid={invalid || undefined}
         value={value}
         onChange={onChange}
         {...props}

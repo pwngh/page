@@ -20,14 +20,11 @@ export function Space({ h, w, children }) {
     return children;
   }
 
-  const spaceClass = h
-    ? `space-x-${h} flex items-center`
-    : w
-      ? `space-y-${w} flex flex-col`
-      : '';
+  // Native CSS gap — dynamic `space-x-${h}` classes can't be statically emitted by Tailwind.
+  const gap = `${(h || w || 0) * 0.25}rem`;
 
   return (
-    <div className={spaceClass}>
+    <div className={h ? 'flex items-center' : 'flex flex-col'} style={{ gap }}>
       {validChildren.map((child, index) => (
         <Fragment key={index}>
           {child}

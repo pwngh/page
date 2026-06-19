@@ -200,8 +200,8 @@ const componentHandlers = {
   }),
 
   // Utility Components
-  'aspect-ratio': async (data) => ({
-    props: mergeComponentProps('aspect-ratio', {
+  'aspect_ratio': async (data) => ({
+    props: mergeComponentProps('aspect_ratio', {
       ratio: data.ratio
     }),
     components: [data.component]
@@ -311,7 +311,7 @@ export const createActions = (db, methods) => {
           const data = JSON.parse(formData.get('data'));
           const componentData = await componentHandlers[type](data);
 
-          const components = await methods.getComponents({ pageId });
+          const components = await methods.getComponents(pageId);
 
           const component = {
             id: generateComponentId(type, components),
@@ -336,7 +336,7 @@ export const createActions = (db, methods) => {
         }
 
         case 'remove': {
-          const components = (await methods.getComponents({ pageId }))
+          const components = (await methods.getComponents(pageId))
             .filter(c => c.id !== componentId);
 
           const page = await methods.updatePage(pageId, { components });

@@ -114,12 +114,12 @@ export function useDoActionHandler() {
         try {
           const formElement = window.document.querySelectorAll(`#${formId}`)[0];
           if(formElement && typeof formElement === "object") {
-            if(formAction === "submit" && 'click' in formElement) {
+            if(formAction === "submit" && typeof formElement.submit === 'function') {
               formElement.submit();
               return null;
             }
 
-            if(formAction === "reset" && 'click' in formElement) {
+            if(formAction === "reset" && typeof formElement.reset === 'function') {
               formElement.reset();
               return null;
             }

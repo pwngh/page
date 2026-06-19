@@ -8,7 +8,6 @@ import {
   mergeComponentProps,
   createUrlWithParams,
   cn,
-  createDeferred,
   formatValue
 } from '../src/shared/utils.js';
 import { DEFAULT_COMPONENT_PROPS } from '../src/shared/constants.js';
@@ -195,20 +194,6 @@ describe('cn', () => {
 
   it('collapses repeated whitespace', () => {
     assert.equal(cn('a ', ' b', { ' c': true }), 'a b c');
-  });
-});
-
-describe('createDeferred', () => {
-  it('resolves the promise from outside', async () => {
-    const { promise, resolve } = createDeferred();
-    resolve('done');
-    assert.equal(await promise, 'done');
-  });
-
-  it('rejects the promise from outside', async () => {
-    const { promise, reject } = createDeferred();
-    reject(new Error('nope'));
-    await assert.rejects(promise, /nope/);
   });
 });
 

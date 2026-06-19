@@ -10,9 +10,8 @@ CREATE TABLE `app_db`.`projects_ref`  (
   `Project_Active` tinyint UNSIGNED DEFAULT '1',
   `Created_UTC_DateTime` datetime(6) NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT 'The UTC DateTime the record was inserted/saved.',
   `Created_UTC_Date` date NULL DEFAULT NULL COMMENT 'The UTC Date the record was inserted/saved.  Created_UTC_DateTime is the source.',
-  `Created_UTC_Time` time(6) NULL DEFAULT NULL COMMENT 'The UTC Date the record was inserted/saved.  Created_UTC_DateTime is the source.',
+  `Created_UTC_Time` time(6) NULL DEFAULT NULL COMMENT 'The UTC Time the record was inserted/saved.  Created_UTC_DateTime is the source.',
   PRIMARY KEY (`Project_Id`) USING BTREE,
-  UNIQUE KEY `Project_Id_Index` (`Project_Id`) USING BTREE,
   KEY `Project_Domain_Index` (`Project_Domain`) USING BTREE,
   KEY `Created_UTC_DateTime_Index` (`Created_UTC_DateTime`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=390200 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Reference: All projects.';

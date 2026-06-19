@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { cn } from '../../shared/utils.js';
 
 /**
@@ -15,6 +15,7 @@ export function Modal({
   onClose,
   children,
   title,
+  ariaLabel,
   size = 'md',
   closeOnOverlayClick = true,
   closeOnEsc = true,
@@ -24,52 +25,48 @@ export function Modal({
   const modalRef = useRef(null);
   const previousActiveElement = useRef(null);
 
-  const overlayClasses = useMemo(() => {
-    return cn(
-      'fixed',
-      'inset-0',
-      'bg-black',
-      'bg-opacity-50',
-      'transition-opacity',
-      'duration-300',
-      isOpen ? 'opacity-100' : 'opacity-0'
-    );
-  }, [isOpen]);
+  const overlayClasses = cn(
+    'fixed',
+    'inset-0',
+    'bg-black',
+    'bg-opacity-50',
+    'transition-opacity',
+    'duration-300',
+    isOpen ? 'opacity-100' : 'opacity-0'
+  );
 
-  const modalClasses = useMemo(() => {
-    return cn(
-      // Base
-      'relative',
-      'bg-white',
-      'rounded-lg',
-      'shadow-xl',
-      'transform',
-      'transition-all',
-      'duration-300',
-      'mx-auto',
-      'my-8',
-      'max-h-[calc(100vh-4rem)]',
-      'overflow-hidden',
-      'flex',
-      'flex-col',
+  const modalClasses = cn(
+    // Base
+    'relative',
+    'bg-white',
+    'rounded-lg',
+    'shadow-xl',
+    'transform',
+    'transition-all',
+    'duration-300',
+    'mx-auto',
+    'my-8',
+    'max-h-[calc(100vh-4rem)]',
+    'overflow-hidden',
+    'flex',
+    'flex-col',
 
-      // Sizes
-      {
-        'w-full max-w-sm': size === 'sm',
-        'w-full max-w-md': size === 'md',
-        'w-full max-w-lg': size === 'lg',
-        'w-full max-w-xl': size === 'xl',
-        'w-full h-full m-0': size === 'full',
-      },
+    // Sizes
+    {
+      'w-full max-w-sm': size === 'sm',
+      'w-full max-w-md': size === 'md',
+      'w-full max-w-lg': size === 'lg',
+      'w-full max-w-xl': size === 'xl',
+      'w-full h-full m-0': size === 'full',
+    },
 
-      // Animation
-      isOpen
-        ? 'opacity-100 translate-y-0'
-        : 'opacity-0 translate-y-4',
+    // Animation
+    isOpen
+      ? 'opacity-100 translate-y-0'
+      : 'opacity-0 translate-y-4',
 
-      className
-    );
-  }, [isOpen, size, className]);
+    className
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -79,23 +76,49 @@ export function Modal({
     } else {
       document.body.style.overflow = '';
       previousActiveElement.current?.focus();
+      previousActiveElement.current = null;
     }
 
     return () => {
       document.body.style.overflow = '';
+      // Restore focus on unmount-while-open (the {open && <Modal/>} pattern).
+      // Guarded so we don't double-focus when closing via isOpen=false above,
+      // which already restored focus and cleared the ref.
+      previousActiveElement.current?.focus();
     };
   }, [isOpen]);
 
   useEffect(() => {
-    if (!closeOnEsc) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (closeOnEsc) onClose();
+        return;
+      }
 
-    const handleEscapeKey = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Tab') {
+        const focusable = modalRef.current?.querySelectorAll(
+          'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusable || focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscapeKey);
-      return () => document.removeEventListener('keydown', handleEscapeKey);
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
     }
   }, [isOpen, onClose, closeOnEsc]);
 
@@ -107,6 +130,7 @@ export function Modal({
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
+      aria-label={title ? undefined : ariaLabel}
     >
       {/* Overlay */}
       <div

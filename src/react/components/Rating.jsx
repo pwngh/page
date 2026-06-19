@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useRef } from 'react';
 import { cn } from '../../shared/utils.js';
 
 const STARS = [1, 2, 3, 4, 5];
@@ -21,27 +21,25 @@ export function Rating({
   className,
   ...props
 }) {
-  const containerClasses = useMemo(() => {
-    return cn(
-      'inline-flex',
-      'gap-1',
-      { 'cursor-pointer': !readonly && !disabled },
-      { 'opacity-50': disabled },
-      className
-    );
-  }, [readonly, disabled, className]);
+  const starRefs = useRef({});
 
-  const starClasses = useMemo(() => {
-    return cn(
-      'transition-colors',
-      'duration-150',
-      {
-        'w-4 h-4': size === 'sm',
-        'w-6 h-6': size === 'md',
-        'w-8 h-8': size === 'lg'
-      }
-    );
-  }, [size]);
+  const containerClasses = cn(
+    'inline-flex',
+    'gap-1',
+    { 'cursor-pointer': !readonly && !disabled },
+    { 'opacity-50': disabled },
+    className
+  );
+
+  const starClasses = cn(
+    'transition-colors',
+    'duration-150',
+    {
+      'w-4 h-4': size === 'sm',
+      'w-6 h-6': size === 'md',
+      'w-8 h-8': size === 'lg'
+    }
+  );
 
   const renderStar = (filled) => (
     <svg
@@ -72,6 +70,21 @@ export function Rating({
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleClick(rating);
+    } else if (
+      e.key === 'ArrowRight' ||
+      e.key === 'ArrowUp' ||
+      e.key === 'ArrowLeft' ||
+      e.key === 'ArrowDown'
+    ) {
+      if (readonly || disabled) {
+        return;
+      }
+      e.preventDefault();
+      const delta =
+        e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 1 : -1;
+      const next = Math.min(5, Math.max(1, rating + delta));
+      onChange(next);
+      starRefs.current[next]?.focus();
     }
   };
 
@@ -85,9 +98,16 @@ export function Rating({
       {STARS.map((star) => (
         <span
           key={star}
+          ref={(el) => (starRefs.current[star] = el)}
           onClick={() => handleClick(star)}
           onKeyDown={(e) => handleKeyDown(e, star)}
-          tabIndex={readonly || disabled ? -1 : 0}
+          tabIndex={
+            readonly || disabled
+              ? -1
+              : star === (value > 0 ? value : 1)
+                ? 0
+                : -1
+          }
           role="radio"
           aria-checked={value >= star}
           aria-label={`${star} star${star === 1 ? '' : 's'}`}

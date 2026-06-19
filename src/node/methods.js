@@ -231,13 +231,11 @@ export const createMethods = (db) => {
   /**
    * Read the component list of a page.
    *
-   * @param {{ pageId?: string }} query - Page selector.
+   * @param {string} pageId - Page identifier.
    * @returns {Promise<import('../shared/types').ComponentBase[]>} Components in stored order; empty when the page is missing or has none.
    */
-  const getComponents = async (query = {}) => {
+  const getComponents = async (pageId) => {
     try {
-      const { pageId } = query;
-
       const sqlQuery = `
         SELECT Page_Components as components
         FROM pages_ref
@@ -250,7 +248,7 @@ export const createMethods = (db) => {
         return [];
       }
 
-      const components = JSON.parse(rows[0].components);
+      const components = rows[0].components;
       return Array.isArray(components) ? components : [];
     } catch (error) {
       throw formatError(error, ERROR_MESSAGES.DB_QUERY);
@@ -288,7 +286,7 @@ export const createMethods = (db) => {
       }
 
       const page = pages[0];
-      const components = JSON.parse(page.Page_Components);
+      const components = page.Page_Components || [];
 
       const componentIndex = components.findIndex(c => c.id === componentId);
       const updatedComponent = {
@@ -347,7 +345,7 @@ export const createMethods = (db) => {
         );
       }
 
-      const components = JSON.parse(pages[0].Page_Components);
+      const components = pages[0].Page_Components || [];
       const reorderedComponents = componentIds.map((id, index) => {
         const component = components.find(c => c.id === id);
         if (!component) {

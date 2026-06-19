@@ -87,66 +87,62 @@ export function Radio({
     }
   };
 
-  const radioClasses = useMemo(() => {
-    return cn(
-      // Base
-      'relative',
-      'inline-flex',
-      'items-center',
-      'cursor-pointer',
+  const radioClasses = cn(
+    // Base
+    'relative',
+    'inline-flex',
+    'items-center',
+    'cursor-pointer',
 
-      // Sizing & Spacing
-      {
-        'text-sm': size === 'sm',
-        'text-base': size === 'md',
-        'text-lg': size === 'lg',
-      },
-      {
-        'gap-2': size === 'sm',
-        'gap-3': size === 'md',
-        'gap-4': size === 'lg',
-      },
+    // Sizing & Spacing
+    {
+      'text-sm': size === 'sm',
+      'text-base': size === 'md',
+      'text-lg': size === 'lg',
+    },
+    {
+      'gap-2': size === 'sm',
+      'gap-3': size === 'md',
+      'gap-4': size === 'lg',
+    },
 
-      // Disabled State
-      {
-        'opacity-50 cursor-not-allowed': disabled,
-      },
+    // Disabled State
+    {
+      'opacity-50 cursor-not-allowed': disabled,
+    },
 
-      // Custom Classes
-      className,
-    );
-  }, [size, disabled, className]);
+    // Custom Classes
+    className,
+  );
 
-  const inputClasses = useMemo(() => {
-    return cn(
-      // Base
-      'appearance-none',
-      'border',
-      'border-gray-300',
-      'rounded-full',
-      'transition-colors',
-      'duration-200',
+  const inputClasses = cn(
+    // Base
+    'appearance-none',
+    'border',
+    'border-gray-300',
+    'rounded-full',
+    'transition-colors',
+    'duration-200',
 
-      // Sizing
-      {
-        'w-4 h-4': size === 'sm',
-        'w-5 h-5': size === 'md',
-        'w-6 h-6': size === 'lg',
-      },
+    // Sizing
+    {
+      'w-4 h-4': size === 'sm',
+      'w-5 h-5': size === 'md',
+      'w-6 h-6': size === 'lg',
+    },
 
-      // Checked State
-      {
-        'bg-blue-600 border-transparent': isChecked,
-        'bg-white': !isChecked,
-      },
+    // Checked State
+    {
+      'bg-blue-600 border-transparent': isChecked,
+      'bg-white': !isChecked,
+    },
 
-      // Focus
-      'focus:outline-none',
-      'focus:ring-2',
-      'focus:ring-offset-2',
-      'focus:ring-blue-500',
-    );
-  }, [size, isChecked]);
+    // Focus
+    'focus:outline-none',
+    'focus:ring-2',
+    'focus:ring-offset-2',
+    'focus:ring-blue-500',
+  );
 
   return (
     <label htmlFor={id} className={radioClasses}>

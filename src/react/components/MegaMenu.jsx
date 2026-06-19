@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from '@remix-run/react';
 import { cn } from '../../shared/utils.js';
 
@@ -80,7 +80,7 @@ export function MegaMenu({
   items,
   bgColor = 'bg-white',
   textColor = 'text-gray-800',
-  hoverColor = 'bg-gray-50',
+  hoverColor = 'hover:bg-gray-50',
   selectedColor = 'text-blue-600',
   activeColor = 'bg-gray-100',
   onSelect,
@@ -88,39 +88,22 @@ export function MegaMenu({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    if(typeof window === 'undefined') {
-      return;
-    }
-
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if(window.innerWidth >= 768) {
-        setIsMobileMenuOpen(false);
-      }
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const handleSelect = (item) => {
     setSelectedId(item.id);
     if (onSelect) onSelect(item);
-    if (isMobile) setIsMobileMenuOpen(false);
+    // Closing the mobile menu is a no-op on desktop (it only renders under md:hidden).
+    setIsMobileMenuOpen(false);
   };
 
   const DesktopMenuItem = ({ item }) => {
     const menuItemClasses = cn(
       'relative px-3 py-2 rounded-md text-sm font-medium',
       textColor,
+      hoverColor,
       {
         [selectedColor]: selectedId === item.id,
-        [activeColor]: activeItem === item.id,
-        [`hover:${hoverColor}`]: true
+        [activeColor]: activeItem === item.id
       }
     );
 
@@ -190,9 +173,9 @@ export function MegaMenu({
     const mobileItemClasses = cn(
       'block w-full text-left px-3 py-2 rounded-md text-base font-medium',
       textColor,
+      hoverColor,
       {
-        [selectedColor]: selectedId === item.id,
-        [`hover:${hoverColor}`]: true
+        [selectedColor]: selectedId === item.id
       }
     );
 
@@ -241,7 +224,7 @@ export function MegaMenu({
               className={cn(
                 'inline-flex items-center justify-center p-2 rounded-md',
                 textColor,
-                `hover:${hoverColor}`
+                hoverColor
               )}
             >
               <MenuIcon />

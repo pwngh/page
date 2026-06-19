@@ -46,11 +46,13 @@ export function usePage(options = {}) {
 
   const pageId = params.pageId;
 
-  const endpoint = useMemo(() => {
-    if (options.endpoint) return options.endpoint;
-    if (pageId) return `/pages/${pageId}`;
-    return window.location.pathname;
-  }, [options.endpoint, pageId]);
+  const endpoint =
+    options.endpoint ||
+    (pageId
+      ? `/pages/${pageId}`
+      : typeof window !== 'undefined'
+        ? window.location.pathname
+        : '/');
 
   const pageData = useMemo(() => {
     if (options.initialData) {
@@ -119,15 +121,4 @@ export function usePage(options = {}) {
     fetcher,
     endpoint
   };
-}
-
-/**
- * Resolve a streamed <Await> value and pass it to a render-prop child.
- *
- * @param {Object} props
- * @param {(data: *) => import('react').ReactNode} props.children - Render function receiving the resolved value.
- */
-export function PageDataWrapper({ children }) {
-  const data = useAsyncValue();
-  return children(data);
 }

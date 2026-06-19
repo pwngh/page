@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { cn } from '../../shared/utils.js';
 
 /**
@@ -19,13 +18,11 @@ export function Stepper({
   className,
   ...props
 }) {
-  const containerClasses = useMemo(() => {
-    return cn(
-      'flex',
-      orientation === 'vertical' ? 'flex-col space-y-4' : 'space-x-4',
-      className
-    );
-  }, [orientation, className]);
+  const containerClasses = cn(
+    'flex',
+    orientation === 'vertical' ? 'flex-col space-y-4' : 'space-x-4',
+    className
+  );
 
   const getStepStatus = (index) => {
     if (index === activeStep) return 'current';

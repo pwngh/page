@@ -1,25 +1,4 @@
 /**
- * Logical store names and index definitions for page data.
- */
-export const DB = {
-  COLLECTIONS: {
-    PROJECTS: 'projects',
-    PAGES: 'pages',
-    COMPONENTS: 'components'
-  },
-  INDEXES: {
-    PAGES: [
-      { key: { projectId: 1, slug: 1 }, unique: true },
-      { key: { updatedAt: -1 } }
-    ],
-    COMPONENTS: [
-      { key: { pageId: 1, order: 1 } },
-      { key: { pageId: 1, type: 1 } }
-    ]
-  }
-};
-
-/**
  * Component type identifiers accepted by validateComponent.
  */
 export const COMPONENT_TYPES = {
@@ -54,37 +33,6 @@ export const COMPONENT_TYPES = {
 export const DEFAULT_META = {
   title: 'Untitled Page',
   description: 'No description provided'
-};
-
-export const SIZE_MAPPINGS = {
-  sm: 'text-sm',
-  md: 'text-base',
-  lg: 'text-lg',
-  xl: 'text-xl'
-};
-
-export const COLOR_MAPPINGS = {
-  primary: 'text-blue-600',
-  secondary: 'text-gray-600',
-  success: 'text-green-600',
-  error: 'text-red-600'
-};
-
-export const CONTAINER_MAX_WIDTHS = {
-  sm: 'max-w-screen-sm',
-  md: 'max-w-screen-md',
-  lg: 'max-w-screen-lg',
-  xl: 'max-w-screen-xl',
-  full: 'max-w-full'
-};
-
-export const GRID_COLUMNS = {
-  1: 'grid-cols-1',
-  2: 'grid-cols-2',
-  3: 'grid-cols-3',
-  4: 'grid-cols-4',
-  6: 'grid-cols-6',
-  12: 'grid-cols-12'
 };
 
 /**

@@ -1,6 +1,6 @@
 -- pages_ref: one record per page, scoped to a project via Project_Id.
 -- Page_Meta / Page_Components / Page_Settings store the page document as JSON; pages are looked up by Page_Id or Page_Slug.
--- Page_Active is a soft-delete flag (1 = live); the trigger stamps the Created_UTC_* audit columns on insert.
+-- Page_Active is a soft-delete flag (1 = live); the trigger stamps the Created_UTC_DateTime audit column on insert.
 
 CREATE TABLE `app_db`.`pages_ref`  (
   `Page_Id` int(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Unique key value ID used to identify each individual record in this table.',
@@ -12,10 +12,7 @@ CREATE TABLE `app_db`.`pages_ref`  (
   `Page_Settings` json DEFAULT NULL COMMENT 'A JSON field containing page settings.',
   `Page_Active` tinyint UNSIGNED DEFAULT '1',
   `Created_UTC_DateTime` datetime(6) NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT 'The UTC DateTime the record was inserted/saved.',
-  `Created_UTC_Date` date NULL DEFAULT NULL COMMENT 'The UTC Date the record was inserted/saved.  Created_UTC_DateTime is the source.',
-  `Created_UTC_Time` time(6) NULL DEFAULT NULL COMMENT 'The UTC Date the record was inserted/saved.  Created_UTC_DateTime is the source.',
   PRIMARY KEY (`Page_Id`) USING BTREE,
-  UNIQUE KEY `Page_Id_Index` (`Page_Id`) USING BTREE,
   KEY `Page_Slug_Index` (`Page_Slug`) USING BTREE,
   KEY `Created_UTC_DateTime_Index` (`Created_UTC_DateTime`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=840100 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Reference: All pages.';
@@ -27,9 +24,5 @@ CREATE TRIGGER `pages_ref_before_insert_trigger` BEFORE INSERT ON `pages_ref` FO
 
 
 SET NEW.Created_UTC_DateTime = UTC_TIMESTAMP(6) ; -- set only on insert
-
-SET NEW.Created_UTC_Date = CAST(NEW.Created_UTC_DateTime AS DATE) ; -- set only on insert
-
-SET NEW.Created_UTC_Time = CAST(NEW.Created_UTC_DateTime AS TIME) ; -- set only on insert
 
 END;

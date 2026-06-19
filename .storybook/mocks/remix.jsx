@@ -14,7 +14,11 @@ export const withRemixMocks = (mockData = {}) => function WithRemixMocks(Story) 
     {
       id: 'root',
       path: '/',
-      element: <Story/>,
+      // createRemixStub follows Remix route conventions: it renders `Component`,
+      // not React Router's `element` (which it ignores — leaving a blank page).
+      Component: function RootRoute() {
+        return <Story/>;
+      },
       loader: () => mockState.loaderData,
     },
   ]);

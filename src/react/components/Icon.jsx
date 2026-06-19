@@ -20,15 +20,15 @@ export function Icon({
   color = 'black',
   className,
   style,
-  onClick = () => void 0,
+  onClick,
   title,
   animation = 'none'
 }) {
-  const animationClass = useMemo(() => ({
-   none: '',
-   spin: 'animate-spin',
-   pulse: 'animate-pulse'
-  })[animation], [animation]);
+  const animationClass = {
+    none: '',
+    spin: 'animate-spin',
+    pulse: 'animate-pulse'
+  }[animation];
 
   const iconSvg = useMemo(() => {
     const icons = {
@@ -97,6 +97,16 @@ export function Icon({
     return icons[name];
   }, [name]);
 
+  const isInteractive = typeof onClick === 'function';
+  const handleKeyDown = isInteractive
+    ? (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick(e);
+        }
+      }
+    : undefined;
+
   return (
     <svg
       width={size}
@@ -107,8 +117,11 @@ export function Icon({
       className={`${className || ''} ${animationClass}`}
       style={style}
       onClick={onClick}
-      aria-hidden={!title}
-      role={title ? 'img' : 'presentation'}
+      onKeyDown={handleKeyDown}
+      tabIndex={isInteractive ? 0 : undefined}
+      aria-hidden={!title && !isInteractive}
+      aria-label={!title && isInteractive ? name : undefined}
+      role={title ? 'img' : isInteractive ? 'button' : 'presentation'}
     >
       {title && <title>{title}</title>}
       {iconSvg}

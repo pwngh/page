@@ -243,7 +243,7 @@ The package implements comprehensive error handling:
 
 ```javascript
 try {
-  const response = await api.updateComponent(componentId, data);
+  const response = await api.methods.updateComponent(componentId, data);
 } catch (error) {
   if (error.code === 'VALIDATION_ERROR') {
     // Handle validation errors
@@ -253,9 +253,9 @@ try {
 
 ### Requirements
 
-- Remix ^2.0.0
-- React ^18.0.0
-- Node.js ^18.0.0
+- Remix >=2.13.1
+- React >=18.2.0
+- Node.js >=20.0.0
 
 ### TypeScript Support
 

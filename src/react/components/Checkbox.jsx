@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { cn } from '../../shared/utils.js';
 
 /**
@@ -34,71 +34,67 @@ export function Checkbox({
     onChange?.(e.target.checked);
   };
 
-  const checkboxClasses = useMemo(() => {
-    return cn(
-      // Base
-      'relative',
-      'inline-flex',
-      'items-center',
-      'justify-center',
-      'transition-all',
-      'duration-200',
-      'select-none',
+  const checkboxClasses = cn(
+    // Base
+    'relative',
+    'inline-flex',
+    'items-center',
+    'justify-center',
+    'transition-all',
+    'duration-200',
+    'select-none',
 
-      // Sizing
-      {
-        'h-4 w-4': size === 'sm',
-        'h-5 w-5': size === 'md',
-        'h-6 w-6': size === 'lg',
-      },
+    // Sizing
+    {
+      'h-4 w-4': size === 'sm',
+      'h-5 w-5': size === 'md',
+      'h-6 w-6': size === 'lg',
+    },
 
-      // Borders & Radius
-      'rounded',
-      'border',
-      'border-gray-300',
+    // Borders & Radius
+    'rounded',
+    'border',
+    'border-gray-300',
 
-      // Checked & Indeterminate States
-      {
-        'bg-blue-600 border-transparent': isChecked || indeterminate,
-        'hover:bg-blue-700': (isChecked || indeterminate) && !disabled,
-      },
+    // Checked & Indeterminate States
+    {
+      'bg-blue-600 border-transparent': isChecked || indeterminate,
+      'hover:bg-blue-700': (isChecked || indeterminate) && !disabled,
+    },
 
-      // Focus
-      'focus:outline-none',
-      'focus:ring-2',
-      'focus:ring-offset-2',
-      'focus:ring-blue-500',
+    // Focus
+    'focus:outline-none',
+    'focus:ring-2',
+    'focus:ring-offset-2',
+    'focus:ring-blue-500',
 
-      // Disabled State
-      {
-        'opacity-50 cursor-not-allowed': disabled,
-      },
+    // Disabled State
+    {
+      'opacity-50 cursor-not-allowed': disabled,
+    },
 
-      // Custom Classes
-      className,
-    );
-  }, [size, disabled, isChecked, indeterminate, className]);
+    // Custom Classes
+    className,
+  );
 
-  const labelClasses = useMemo(() => {
-    return cn(
-      // Base
-      'ml-2',
-      'select-none',
+  const labelClasses = cn(
+    // Base
+    'ml-2',
+    'select-none',
 
-      // Typography
-      'text-gray-700',
-      {
-        'text-sm': size === 'sm',
-        'text-base': size === 'md',
-        'text-lg': size === 'lg',
-      },
+    // Typography
+    'text-gray-700',
+    {
+      'text-sm': size === 'sm',
+      'text-base': size === 'md',
+      'text-lg': size === 'lg',
+    },
 
-      // Disabled State
-      {
-        'opacity-50 cursor-not-allowed': disabled,
-      },
-    );
-  }, [size, disabled]);
+    // Disabled State
+    {
+      'opacity-50 cursor-not-allowed': disabled,
+    },
+  );
 
   return (
     <label className="inline-flex items-center">

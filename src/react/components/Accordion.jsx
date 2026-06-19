@@ -24,15 +24,15 @@ const AccordionItem = ({
   isOpen,
   onClick,
   textColor = 'text-gray-800',
-  hoverColor = 'bg-gray-50',
+  hoverColor = 'hover:bg-gray-50',
   activeColor = 'bg-gray-100'
 }) => {
   const headerClasses = cn(
     'flex items-center justify-between w-full px-4 py-3 text-left rounded-md',
     textColor,
+    hoverColor,
     {
-      [activeColor]: isOpen,
-      [`hover:${hoverColor}`]: true
+      [activeColor]: isOpen
     }
   );
 
@@ -83,7 +83,7 @@ export function Accordion({
   items,
   bgColor = 'bg-white',
   textColor = 'text-gray-800',
-  hoverColor = 'bg-gray-50',
+  hoverColor = 'hover:bg-gray-50',
   activeColor = 'bg-gray-100',
   multiple = false
 }) {
